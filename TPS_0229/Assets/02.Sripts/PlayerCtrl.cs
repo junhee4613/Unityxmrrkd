@@ -19,6 +19,10 @@ private readonly float initHp = 100.0f;
     // 현재 생명 값
     public float currHp;
 
+    // 델리게이트 선언
+    public delegate void PlayerDieHandler();
+    // 이벤트 선언
+    public static event PlayerDieHandler OnPlayerDie;
 
     void Start()
     {
@@ -67,12 +71,14 @@ private readonly float initHp = 100.0f;
     {
         Debug.Log("Player Die !");
         // // MONSTER 태그를 가진 모든 게임오브젝트를 찾아옴
-        GameObject[] monsters = GameObject.FindGameObjectsWithTag("MONSTER");
+        // GameObject[] monsters = GameObject.FindGameObjectsWithTag("MONSTER");
         // // 모든 몬스터의 OnPlayerDie 함수를 순차적으로 호출
-        foreach (GameObject monster in monsters)
-        {
-            monster.SendMessage("OnPlayerDie", SendMessageOptions.DontRequireReceiver);
-        }
+        // foreach (GameObject monster in monsters)
+        // {
+        // monster.SendMessage("OnPlayerDie", SendMessageOptions.DontRequireReceiver);
+        // }
+        // 주인공 사망 이벤트 호출(발생)
+        OnPlayerDie();
     }
     void PlayerAnim(float h, float v)
     {

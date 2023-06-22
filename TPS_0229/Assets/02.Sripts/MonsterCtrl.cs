@@ -33,12 +33,27 @@ public class MonsterCtrl : MonoBehaviour
     private readonly int hashHit = Animator.StringToHash("Hit");
     private readonly int hashPlayerDie = Animator.StringToHash("PlayerDie");
     private readonly int hashSpeed = Animator.StringToHash("Speed");
+    private readonly int hashDie = Animator.StringToHash("Die");
+
+    // 몬스터 생명 변수 변수 추가
+    private int hp = 100;
 
     // 혈흔 효과 프리팹
     private GameObject bloodEffect;
 
 
-
+    // 스크립트가 활성화될 때마다 호출되는 함수
+    void OnEnable()
+    {
+        // 이벤트 발생 시 수행할 함수 연결
+        PlayerCtrl.OnPlayerDie += this.OnPlayerDie;
+    }
+    // 스크립트가 비활성화될 때마다 호출되는 함수
+    void OnDisable()
+    {
+        // 기존에 연결된 함수 해제
+        PlayerCtrl.OnPlayerDie -= this.OnPlayerDie;
+    }
     void Start()
     {
         // BloodSprayEffect 프리팹 로드
@@ -120,7 +135,15 @@ public class MonsterCtrl : MonoBehaviour
                         break;
                     // 사망
                     case State.DIE:
+                        isDie = true;
+                        // 추적 정지
+                        agent.isStopped = true;
+                        // 사망 애니메이션 실행
+                        anim.SetTrigger(hashDie);
+                        // 몬스터의 Collider 컴포넌트 비활성화
+                        GetComponent<CapsuleCollider>().enabled = false;
                         break;
+                                    
                 }
                 yield return new WaitForSeconds(0.3f);
             }
@@ -145,6 +168,13 @@ public class MonsterCtrl : MonoBehaviour
     {
         if (coll.collider.CompareTag("BULLET"))
         {
+            // 몬스터의 hp 차감
+            hp -= 10;
+            if (hp <= 0)
+            {
+                state = State.DIE;
+            }
+    
 
             // 충돌한 총알을 삭제
             Destroy(coll.gameObject);

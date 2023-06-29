@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerCtrl : MonoBehaviour
 {
 
@@ -23,10 +23,11 @@ private readonly float initHp = 100.0f;
     public delegate void PlayerDieHandler();
     // 이벤트 선언
     public static event PlayerDieHandler OnPlayerDie;
-
+    private Image hpBar;
     void Start()
     {
-
+        hpBar = GameObject.FindGameObjectWithTag("HP_BAR")?.GetComponent<Image>();
+        DisplayHealth();
         // HP 초기화
         currHp = initHp;
 
@@ -58,7 +59,9 @@ private readonly float initHp = 100.0f;
         if (currHp >= 0.0f && coll.CompareTag("PUNCH"))
         {
             currHp -= 10.0f;
-            Debug.Log($"Player hp = {currHp / initHp}");
+            /*Debug.Log($"Player hp = {currHp / initHp}");*/
+
+            DisplayHealth();
             // Player의 생명이 0 이하이면 사망 처리
             if (currHp <= 0.0f)
             {
@@ -66,8 +69,13 @@ private readonly float initHp = 100.0f;
             }
         }
     }
-    // Player의 사망 처리
-    void PlayerDie()
+    void DisplayHealth()
+        {
+            hpBar.fillAmount = currHp / initHp;
+        }
+
+// Player의 사망 처리
+void PlayerDie()
     {
         Debug.Log("Player Die !");
         // // MONSTER 태그를 가진 모든 게임오브젝트를 찾아옴
@@ -79,6 +87,8 @@ private readonly float initHp = 100.0f;
         // }
         // 주인공 사망 이벤트 호출(발생)
         OnPlayerDie();
+        /*GameObject.Find("GameMGR").GetComponent<GameManager>().IsGameOver = true;*/
+        GameManager.instance.IsGameOver = true;
     }
     void PlayerAnim(float h, float v)
     {

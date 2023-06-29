@@ -1,22 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class UIManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // 버튼을 연결할 변수
+    public Button startButton;
+    public Button optionButton;
+    public Button shopButton;
+    private UnityAction action;
     void Start()
     {
-        
+        Debug.Log("이준희 놓친 코드");
+        // UnityAction을 사용한 이벤트 연결 방식
+        action = () => OnButtonClick(startButton.name);
+        startButton.onClick.AddListener(action);
+        // 무명 메서드를 활용한 이벤트 연결 방식
+        optionButton.onClick.AddListener(delegate { OnButtonClick(optionButton.name); });
+        // 람다식을 활용한 이벤트 연결 방식
+        shopButton.onClick.AddListener(() => OnButtonClick(shopButton.name));
     }
-
-    // Update is called once per frame
-    void Update()
+    public void OnButtonClick(string msg)
     {
-        
-    }
-    public void OnButtonClick()
-    {
-        Debug.Log("Click Button");
+        Debug.Log($"Click Button : {msg}");
     }
 }

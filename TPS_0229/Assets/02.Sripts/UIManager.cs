@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-
+using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     // 버튼을 연결할 변수
@@ -13,17 +13,21 @@ public class UIManager : MonoBehaviour
     private UnityAction action;
     void Start()
     {
-        Debug.Log("이준희 놓친 코드");
         // UnityAction을 사용한 이벤트 연결 방식
-        action = () => OnButtonClick(startButton.name);
+        action = () => OnButtonClick();
         startButton.onClick.AddListener(action);
         // 무명 메서드를 활용한 이벤트 연결 방식
-        optionButton.onClick.AddListener(delegate { OnButtonClick(optionButton.name); });
+        optionButton.onClick.AddListener(delegate { OnButtonClick(); });
         // 람다식을 활용한 이벤트 연결 방식
-        shopButton.onClick.AddListener(() => OnButtonClick(shopButton.name));
+        shopButton.onClick.AddListener(() => OnButtonClick());
     }
-    public void OnButtonClick(string msg)
+
+    public void OnButtonClick()
     {
-        Debug.Log($"Click Button : {msg}");
+    }
+    public void OnStartClick()
+    {
+        SceneManager.LoadScene("Level_01");
+        SceneManager.LoadScene("Play", LoadSceneMode.Additive);
     }
 }
